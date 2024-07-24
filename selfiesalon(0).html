@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selfie Style Salón</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 50px 0;
+            background-color: #4B0082;
+            color: #ffffff;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content h2 {
+            color: #4B0082;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #4B0082;
+            color: #ffffff;
+        }
+        form {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #4B0082;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        .appointments {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Selfie Style Salón</h1>
+    </header>
+    <div class="container">
+        <div class="content">
+            <h2>Biografía</h2>
+            <p>Bienvenido a Selfie Style Salón, tu destino para estilismo y belleza. Con años de experiencia en el sector, nos dedicamos a ofrecer los mejores servicios para resaltar tu belleza natural.</p>
+        </div>
+        <div class="content">
+            <h2>Experiencias Profesionales</h2>
+            <ul>
+                <li><strong>Estilismo:</strong> Experiencia en cortes de cabello, peinados y coloración para todo tipo de cabello.</li>
+                <li><strong>Manicura y Pedicura:</strong> Servicios completos de cuidado de uñas con los mejores productos.</li>
+                <li><strong>Maquillaje Profesional:</strong> Maquillaje para eventos especiales, bodas y sesiones de fotos.</li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Citas</h2>
+            <p>Nuestro horario de atención es:</p>
+            <ul>
+                <li>Lunes a sábado: 8:00 a.m. a 8:00 p.m.</li>
+                <li>Domingo: 8:00 a.m. a 4:00 p.m.</li>
+            </ul>
+            <p><strong>Importante:</strong> Los diseños de color se atienden únicamente de 8:00 a.m. a más tardar las 12:00 p.m. Por favor, no programes citas para diseños de color después de las 12:00 p.m.</p>
+        </div>
+        <div class="content">
+            <h2>Citas para Tratamientos Especiales</h2>
+            <p>Ofrecemos servicios de extracción de verrugas, puntos de rubí, manchas en la cara, baby glow y baby lip.</p>
+            <p>Horario de atención para estos servicios: 1:00 p.m. a 8:00 p.m.</p>
+        </div>
+        <div class="content">
+            <h2>Agendar Citas</h2>
+            <form id="appointmentForm">
+                <label for="service">Selecciona un servicio:</label>
+                <select id="service" name="service">
+                    <option value="salon">Servicios del Salón</option>
+                    <option value="special">Tratamientos Especiales</option>
+                </select>
+                <label for="date">Fecha:</label>
+                <input type="date" id="date" name="date" required>
+                <label for="time">Hora:</label>
+                <input type="time" id="time" name="time" required>
+                <button type="submit">Agendar Cita</button>
+            </form>
+            <div class="appointments" id="appointments">
+                <h3>Citas Programadas</h3>
+                <ul id="appointmentList"></ul>
+            </div>
+        </div>
+        <div class="content">
+            <h2>Contacto</h2>
+            <p>WhatsApp: 6461029821, 6462952699</p>
+            <p>Teléfono: 6462440741</p>
+        </div>
+    </div>
+    <footer>
+        &copy; 2024 Selfie Style Salón
+    </footer>
+    <script>
+        const form = document.getElementById('appointmentForm');
+        const appointmentList = document.getElementById('appointmentList');
+        const appointments = [];
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const service = form.service.value;
+            const date = form.date.value;
+            const time = form.time.value;
+            const interval = service === 'salon' ? 90 : 60; // 90 minutes for salon services, 60 minutes for special treatments
+
+            const newAppointment = new Date(`${date}T${time}`);
+            const endTime = new Date(newAppointment.getTime() + interval * 60000);
+
+            // Check for overlapping appointments
+            for (let appointment of appointments) {
+                if (
+                    newAppointment >= appointment.startTime && newAppointment < appointment.endTime ||
+                    endTime > appointment.startTime && endTime <= appointment.endTime
+                ) {
+                    alert('Esta hora ya está ocupada. Por favor, elige otra hora.');
+                    return;
+                }
+            }
+
+            appointments.push({ service, startTime: newAppointment, endTime });
+
+            const li = document.createElement('li');
+            li.textContent = `${service === 'salon' ? 'Servicios del Salón' : 'Tratamientos Especiales'} - ${date} ${time}`;
+            appointmentList.appendChild(li);
+
+            form.reset();
+        });
+    </script>
+</body>
+</html>
